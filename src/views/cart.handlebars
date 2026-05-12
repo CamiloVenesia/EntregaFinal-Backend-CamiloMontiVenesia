@@ -1,0 +1,183 @@
+<div class="container mt-5 mb-5" style="max-width: 1050px;">
+    
+    <div class="d-flex align-items-center mb-4 pb-3 border-bottom border-dark">
+        <h3 class="fw-bold text-uppercase m-0" style="letter-spacing: 1px;">Mi Carrito</h3>
+        {{#if cart.products.length}}
+            <span class="badge bg-dark rounded-0 ms-3 px-2 py-1">{{cart.products.length}} ÍTEMS</span>
+        {{/if}}
+    </div>
+    
+    {{#if cart.products.length}}
+    <div class="row gx-lg-5 mt-4">
+        
+        <div class="col-lg-8 mb-5 mb-lg-0">
+            <div class="d-none d-md-flex justify-content-between pb-2 mb-3 text-muted text-uppercase fw-bold" style="font-size: 0.7rem; letter-spacing: 1px;">
+                <div style="width: 50%">Producto</div>
+                <div style="width: 25%" class="text-center">Cantidad</div>
+                <div style="width: 25%" class="text-end">Total</div>
+            </div>
+            
+            {{#each cart.products}}
+            <div class="d-flex align-items-center border-bottom border-light py-3 product-row">
+                
+                <div class="me-3 bg-light d-flex align-items-center justify-content-center" style="width: 80px; height: 100px; overflow: hidden; flex-shrink: 0;">
+                    {{#if this.product.thumbnails.[0]}}
+                        <img src="{{this.product.thumbnails.[0]}}" alt="{{this.product.title}}" class="w-100 h-100" style="object-fit: cover;">
+                    {{else}}
+                        <i class="bi bi-image text-secondary opacity-25 fs-3"></i>
+                    {{/if}}
+                </div>
+                
+                <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                    
+                    <div style="width: 100%; max-width: 250px;" class="mb-3 mb-md-0 me-md-3">
+                        <h6 class="fw-bold text-dark text-uppercase mb-1" style="font-size: 0.85rem; letter-spacing: 0.5px;">{{this.product.title}}</h6>
+                        <p class="text-muted mb-1 text-uppercase" style="font-size: 0.65rem; letter-spacing: 1px;">Ref: {{this.product.code}}</p>
+                        <p class="text-muted mb-0 fw-semibold d-md-none" style="font-size: 0.85rem;">${{this.product.price}}</p>
+                    </div>
+                    
+                    <div style="width: 120px;" class="mb-3 mb-md-0 d-flex flex-column align-items-md-center">
+                        <div class="border border-dark d-flex align-items-center bg-white" style="height: 35px; width: 100px;">
+                            <button onclick="actualizarCantidad('{{this.product._id}}', {{this.quantity}}, -1)" class="btn btn-sm rounded-0 border-0 flex-fill d-flex align-items-center justify-content-center h-100 btn-qty">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <span class="fw-bold text-dark mx-2" style="font-size: 0.9rem;">{{this.quantity}}</span>
+                            <button onclick="actualizarCantidad('{{this.product._id}}', {{this.quantity}}, 1)" class="btn btn-sm rounded-0 border-0 flex-fill d-flex align-items-center justify-content-center h-100 btn-qty">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div style="width: 100px;" class="text-md-end d-flex justify-content-between justify-content-md-end align-items-center">
+                        <span class="fw-bold text-dark d-none d-md-inline" style="font-size: 1rem;">${{this.subtotal}}</span>
+                        <button onclick="eliminarDelCarrito('{{this.product._id}}')" class="btn btn-link text-muted p-0 border-0 ms-md-4 btn-delete" title="Eliminar producto">
+                            <i class="bi bi-trash3 fs-5 text-danger"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+            
+            <div class="d-flex justify-content-between align-items-center mt-5 pt-3">
+                <button onclick="vaciarCarrito()" class="btn btn-outline-danger rounded-0 px-4 py-2 text-uppercase fw-bold transition-all" style="font-size: 0.75rem; letter-spacing: 1px;">
+                    <i class="bi bi-trash3 me-2"></i> Vaciar Carrito
+                </button>
+                <a href="/products" class="btn btn-dark rounded-0 px-4 py-2 text-uppercase fw-bold transition-all" style="font-size: 0.75rem; letter-spacing: 1px;">Seguir Comprando</a>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="bg-light p-4 rounded-0 shadow-sm" style="border: 1px solid #e0e0e0; border-top: 4px solid #000;">
+                <h5 class="fw-bold text-dark text-uppercase mb-4 pb-3 border-bottom" style="letter-spacing: 1px; font-size: 1.1rem;">Resumen de Compra</h5>
+                
+                <div class="d-flex justify-content-between mb-3 text-muted" style="font-size: 0.9rem;">
+                    <span>Subtotal</span>
+                    <span>${{totalCarrito}}</span>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-4 text-muted" style="font-size: 0.9rem;">
+                    <span>Envío</span>
+                    <span class="text-dark fw-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Gratis</span>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-4 border-top pt-3">
+                    <span class="fw-bold text-dark text-uppercase" style="letter-spacing: 1px;">Total</span>
+                    <span class="fw-bold text-dark fs-4" style="line-height: 0.8;">${{totalCarrito}}</span>
+                </div>
+                
+                <button onclick="procesarPago()" class="btn btn-dark text-white fw-bold w-100 rounded-0 py-3 text-uppercase transition-all btn-checkout mb-3 mt-2" style="letter-spacing: 2px; font-size: 0.85rem;">
+                    Finalizar Compra
+                </button>
+                
+                <div class="text-center text-muted text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 1px;">
+                    <i class="bi bi-shield-lock fs-5 d-block mb-1 text-dark"></i>
+                    Transacción 100% Segura
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{else}}
+    <div class="text-center py-5 my-5">
+        <i class="bi bi-bag text-muted mb-3 d-block" style="font-size: 3.5rem; opacity: 0.3;"></i>
+        <h4 class="fw-bold text-dark text-uppercase mb-3" style="letter-spacing: 1px;">Tu carrito está vacío</h4>
+        <p class="text-muted mb-4 mx-auto" style="font-size: 0.9rem; max-width: 400px;">
+            Parece que aún no elegiste tus próximos essentials. Descubrí la nueva colección y sumá tus favoritos.
+        </p>
+        <a href="/products" class="btn btn-dark rounded-0 px-5 py-3 text-uppercase fw-bold transition-all" style="letter-spacing: 1px; font-size: 0.85rem;">
+            Explorar Catálogo
+        </a>
+    </div>
+    {{/if}}
+</div>
+
+<style>
+    .btn-qty:hover { background-color: #f1f1f1; }
+    .btn-delete { transition: transform 0.2s ease; }
+    .btn-delete:hover { transform: scale(1.1); }
+    .btn-checkout { background-color: #000; border-color: #000; }
+    .btn-checkout:hover { background-color: #333; border-color: #333; transform: translateY(-2px); }
+</style>
+
+<script>
+    const cartId = '{{cart._id}}';
+
+    async function actualizarCantidad(productId, cantidadActual, cambio) {
+        const nuevaCantidad = cantidadActual + cambio;
+        if (nuevaCantidad < 1) return; 
+
+        try {
+            const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ quantity: nuevaCantidad })
+            });
+
+            if (response.ok) window.location.reload();
+            else Swal.fire({ icon: 'error', title: 'Oops...', text: 'No se pudo actualizar', confirmButtonColor: '#000' });
+        } catch (error) { console.error(error); }
+    }
+
+    async function eliminarDelCarrito(productId) {
+        try {
+            const response = await fetch(`/api/carts/${cartId}/products/${productId}`, { method: 'DELETE' });
+            if (response.ok) window.location.reload(); 
+            else Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo eliminar', confirmButtonColor: '#000' });
+        } catch (error) { console.error(error); }
+    }
+
+    async function vaciarCarrito() {
+        Swal.fire({
+            title: '¿VACIAR CARRITO?',
+            text: "Se eliminarán todos los productos de tu lista.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#000',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'SÍ, VACIAR',
+            cancelButtonText: 'CANCELAR'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await fetch(`/api/carts/${cartId}`, { method: 'DELETE' });
+                if (response.ok) window.location.reload();
+            }
+        });
+    }
+
+    async function procesarPago() {
+        try {
+            Swal.fire({ title: 'PROCESANDO PAGO...', text: 'Asegurando tu transacción', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
+            const response = await fetch(`/api/carts/${cartId}/purchase`, { method: 'POST' });
+            if (response.ok) {
+                await fetch(`/api/carts/${cartId}`, { method: 'DELETE' });
+                Swal.fire({ icon: 'success', title: '¡COMPRA EXITOSA!', text: 'Te enviamos el ticket a tu correo.', confirmButtonColor: '#000', iconColor: '#000' })
+                .then(() => { window.location.reload(); });
+            } else {
+                const data = await response.json();
+                Swal.fire({ icon: 'warning', title: 'Atención', text: data.error || 'Problemas de stock', confirmButtonColor: '#000' });
+            }
+        } catch (error) {
+            Swal.fire({ icon: 'error', title: 'Error de conexión', text: 'No pudimos procesar el pago.', confirmButtonColor: '#000' });
+        }
+    }
+</script>

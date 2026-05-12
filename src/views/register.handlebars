@@ -1,0 +1,125 @@
+<div class="container mt-5 mb-5 d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="row w-100 justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <div class="text-center mb-5">
+                <i class="bi bi-person-badge fs-1 text-dark mb-3"></i>
+                <h2 class="fw-bold text-uppercase" style="letter-spacing: 2px;">Registro</h2>
+                <p class="text-muted small text-uppercase" style="letter-spacing: 1px;">Unite al club y empezá a comprar</p>
+            </div>
+
+            <form id="registerForm" class="px-md-5">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" name="first_name" class="form-control form-control-premium" id="firstNameInput" placeholder="Nombre" required>
+                            <label for="firstNameInput" class="text-muted text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Nombre</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" name="last_name" class="form-control form-control-premium" id="lastNameInput" placeholder="Apellido" required>
+                            <label for="lastNameInput" class="text-muted text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Apellido</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-8">
+                        <div class="form-floating">
+                            <input type="email" name="email" class="form-control form-control-premium" id="emailInput" placeholder="name@example.com" required>
+                            <label for="emailInput" class="text-muted text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Correo Electrónico</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input type="number" name="age" class="form-control form-control-premium" id="ageInput" placeholder="Edad" required>
+                            <label for="ageInput" class="text-muted text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Edad</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-floating mb-5">
+                    <input type="password" name="password" class="form-control form-control-premium" id="passwordInput" placeholder="Contraseña" required>
+                    <label for="passwordInput" class="text-muted text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Crear Contraseña</label>
+                </div>
+
+                <button type="submit" class="btn btn-dark w-100 py-3 mb-4 fw-bold rounded-0 text-uppercase transition-all btn-auth" style="letter-spacing: 2px; font-size: 0.9rem;">
+                    Crear Cuenta
+                </button>
+                
+                <div class="text-center border-top pt-4">
+                    <span class="text-muted small text-uppercase" style="letter-spacing: 1px;">¿Ya sos miembro? </span>
+                    <a href="/login" class="text-dark fw-bold small text-uppercase text-decoration-none border-bottom border-dark pb-1 ms-2" style="letter-spacing: 1px;">Iniciá Sesión</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilo de inputs premium (Solo borde inferior) */
+    .form-control-premium {
+        border: none !important;
+        border-bottom: 2px solid #e0e0e0 !important;
+        border-radius: 0 !important;
+        background-color: transparent !important;
+        padding-left: 0 !important;
+        box-shadow: none !important;
+        transition: border-color 0.3s ease;
+    }
+    .form-control-premium:focus {
+        border-bottom: 2px solid #000 !important;
+    }
+    
+    .form-floating > label {
+        padding-left: 0;
+    }
+
+    .btn-auth:hover {
+        background-color: #333;
+        transform: translateY(-2px);
+    }
+</style>
+
+<script>
+    const form = document.getElementById('registerForm');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const data = new FormData(form);
+        const obj = {};
+        data.forEach((value, key) => obj[key] = value);
+
+        const response = await fetch('/api/sessions/register', {
+            method: 'POST',
+            body: JSON.stringify(obj),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+
+        if (response.status === 200) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡BIENVENIDO!',
+                text: 'Cuenta creada con éxito.',
+                showConfirmButton: false,
+                timer: 2000,
+                iconColor: '#000'
+            }).then(() => {
+                window.location.href = '/login';
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'ERROR AL REGISTRARSE',
+                text: result.error || 'Ocurrió un problema',
+                confirmButtonText: 'REINTENTAR',
+                confirmButtonColor: '#000',
+                iconColor: '#000'
+            });
+        }
+    });
+</script>

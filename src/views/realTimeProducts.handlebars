@@ -1,0 +1,180 @@
+<div class="container-fluid px-lg-5 mt-4 mb-5">
+    
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-3 border-bottom border-dark">
+        <h2 class="text-dark fw-bold m-0 text-uppercase" style="letter-spacing: 1px;">
+            <i class="bi bi-sliders text-dark me-2"></i>Panel de Control
+        </h2>
+        <div class="d-flex align-items-center mt-2 mt-md-0">
+            <span class="badge bg-dark rounded-0 px-3 py-2 text-uppercase d-flex align-items-center" style="letter-spacing: 2px;">
+                <i class="bi bi-circle-fill text-danger me-2" style="font-size: 0.5rem; animation: pulse 1.5s infinite;"></i> LIVE
+            </span>
+        </div>
+    </div>
+
+    <div class="row g-4 gx-lg-5">
+        
+        <div class="col-lg-4">
+            <div class="bg-light p-4 rounded-0 shadow-sm sticky-top border border-light" style="top: 120px;">
+                <h5 class="fw-bold text-dark text-uppercase mb-4 pb-2 border-bottom" style="letter-spacing: 1px; font-size: 1rem;">
+                    Crear Producto
+                </h5>
+                
+                <form id="formAgregarProducto">
+                    <div class="form-floating mb-3">
+                        <input type="text" id="title" class="form-control form-control-premium" placeholder="Título" required>
+                        <label for="title" class="text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Título</label>
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <input type="text" id="description" class="form-control form-control-premium" placeholder="Descripción" required>
+                        <label for="description" class="text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Descripción</label>
+                    </div>
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input type="number" id="price" class="form-control form-control-premium" placeholder="Precio" required>
+                                <label for="price" class="text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Precio ($)</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input type="number" id="stock" class="form-control form-control-premium" placeholder="Stock" required>
+                                <label for="stock" class="text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Stock</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input type="text" id="code" class="form-control form-control-premium" placeholder="Código" required>
+                                <label for="code" class="text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Código</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input type="text" id="category" class="form-control form-control-premium" placeholder="Categoría" required>
+                                <label for="category" class="text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Categoría</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating mb-4">
+                        <input type="text" id="thumbnail" class="form-control form-control-premium" placeholder="URL Imagen">
+                        <label for="thumbnail" class="text-muted text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">URL de Imagen (Opcional)</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-dark w-100 py-3 text-uppercase fw-bold rounded-0 transition-all btn-admin">
+                        Publicar Producto
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div id="contenedorProductos" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+                <div class="col-12 text-center text-muted py-5">
+                    <div class="spinner-border text-dark" role="status"></div>
+                    <p class="mt-3 text-uppercase" style="letter-spacing: 1px; font-size: 0.8rem;">Sincronizando Base de Datos...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-0 shadow-lg">
+            <div class="modal-header border-bottom-0 pt-4 pb-0 px-4 bg-dark text-white">
+                <h5 class="fw-bold text-uppercase m-0" style="letter-spacing: 1px;">Editar Producto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 bg-light">
+                <form id="formEditarProducto">
+                    <input type="hidden" id="editId"> 
+                    
+                    <div class="form-floating mb-3">
+                        <input type="text" id="editTitle" class="form-control form-control-premium" required>
+                        <label class="text-muted text-uppercase" style="font-size: 0.75rem;">Título</label>
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <input type="text" id="editDescription" class="form-control form-control-premium" required>
+                        <label class="text-muted text-uppercase" style="font-size: 0.75rem;">Descripción</label>
+                    </div>
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input type="number" id="editPrice" class="form-control form-control-premium" required>
+                                <label class="text-muted text-uppercase" style="font-size: 0.75rem;">Precio ($)</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input type="number" id="editStock" class="form-control form-control-premium" required>
+                                <label class="text-muted text-uppercase" style="font-size: 0.75rem;">Stock</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input type="text" id="editCode" class="form-control form-control-premium text-muted" readonly title="El código no se puede editar">
+                                <label class="text-muted text-uppercase" style="font-size: 0.75rem;">Código (Fijo)</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input type="text" id="editCategory" class="form-control form-control-premium" required>
+                                <label class="text-muted text-uppercase" style="font-size: 0.75rem;">Categoría</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating mb-4">
+                        <input type="text" id="editThumbnail" class="form-control form-control-premium">
+                        <label class="text-muted text-uppercase" style="font-size: 0.75rem;">URL Imagen</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-dark text-white fw-bold w-100 rounded-0 py-3 text-uppercase btn-admin">
+                        Guardar Cambios
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilos Premium Formulario */
+    .form-control-premium {
+        border: none !important;
+        border-bottom: 2px solid #ccc !important;
+        border-radius: 0 !important;
+        background-color: transparent !important;
+        padding-left: 0 !important;
+        box-shadow: none !important;
+        transition: border-color 0.3s ease;
+    }
+    .form-control-premium:focus {
+        border-bottom: 2px solid #000 !important;
+    }
+    .form-floating > label { padding-left: 0; }
+    
+    .btn-admin:hover {
+        background-color: #333;
+        transform: translateY(-2px);
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.3; }
+        100% { opacity: 1; }
+    }
+</style>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>

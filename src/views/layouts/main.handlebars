@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoderStore</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        .hover-celeste:hover { color: #0dcaf0 !important; transition: color 0.2s ease-in-out; }
+        
+        /* --- ESTILOS DEL HEADER ANIMADO --- */
+        #smart-header {
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            width: 100%;
+            z-index: 1020;
+        }
+        .nav-hidden {
+            transform: translateY(-100%);
+        }
+
+        /* --- ESTILOS DE LA BARRA ADIDAS --- */
+        .announcement-bar {
+            background-color: #000;
+            color: #fff;
+            font-size: 0.75rem; 
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            height: 38px;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+        .announcement-slider {
+            display: flex;
+            flex-direction: column;
+            /* Bajamos a 9 segundos porque hay un mensaje menos */
+            animation: slideUp 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
+        }
+        .announcement-item {
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+        
+        /* Ajustamos los porcentajes de la animación para 2 mensajes + 1 duplicado */
+        @keyframes slideUp {
+            0%, 40%   { transform: translateY(0); }           /* Frena en el msj 1 */
+            50%, 90%  { transform: translateY(-38px); }       /* Frena en el msj 2 */
+            100%      { transform: translateY(-76px); }       /* Sube al msj duplicado (reinicia) */
+        }
+    </style>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+    <header id="smart-header" class="sticky-top bg-white border-bottom shadow-sm">
+        
+        <div class="announcement-bar text-center">
+            <div class="announcement-slider">
+                <div class="announcement-item">
+                    <i class="bi bi-credit-card me-2"></i> HASTA 6 CUOTAS SIN INTERÉS
+                </div>
+                <div class="announcement-item">
+                    <i class="bi bi-box-seam me-2"></i> DEVOLUCIONES GRATUITAS EN 30 DÍAS
+                </div>
+                <div class="announcement-item">
+                    <i class="bi bi-credit-card me-2"></i> HASTA 6 CUOTAS SIN INTERÉS
+                </div>
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand-lg navbar-light py-3">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-dark text-uppercase d-flex align-items-center" style="letter-spacing: 1px;" href="/products">
+                    <i class="bi bi-rocket-takeoff-fill fs-4 me-2"></i> CODERSTORE
+                </a>
+                
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-2">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark text-uppercase fw-semibold hover-celeste" style="font-size: 0.8rem; letter-spacing: 1px;" href="/products">
+                                <i class="bi bi-grid me-1"></i> Catálogo
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger text-uppercase fw-semibold hover-celeste" style="font-size: 0.8rem; letter-spacing: 1px;" href="/realtimeproducts">
+                                <i class="bi bi-broadcast me-1"></i> En Vivo
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex flex-column flex-lg-row gap-3 align-items-lg-center mt-3 mt-lg-0">
+                        {{#if user}}
+                            <a href="/carts/{{user.cart}}" class="btn btn-outline-dark rounded-0 px-3 py-2 text-uppercase fw-bold position-relative" style="font-size: 0.75rem; letter-spacing: 1px;">
+                                <i class="bi bi-bag me-1"></i> Mi Carrito
+                                <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" style="font-size: 0.65rem; padding: 0.35em 0.5em;">
+                                    0
+                                </span>
+                            </a>
+                            <div class="dropdown">
+                                <button class="btn btn-dark rounded-0 px-4 py-2 text-uppercase fw-bold dropdown-toggle w-100" style="font-size: 0.75rem; letter-spacing: 1px;" type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-person-circle me-1"></i> {{user.name}}
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end rounded-0 border-dark mt-2 shadow-sm">
+                                    <li><a class="dropdown-item text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;" href="/api/sessions/logout">Cerrar Sesión</a></li>
+                                </ul>
+                            </div>
+                        {{else}}
+                            <a href="/login" class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">Iniciar Sesión</a>
+                            <a href="/register" class="btn btn-dark rounded-0 px-4 py-2 text-uppercase fw-bold" style="font-size: 0.75rem; letter-spacing: 1px;">Registrarse</a>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow-1 mb-5 pb-5">
+        {{{body}}}
+    </main>
+
+    <footer class="bg-dark text-light pt-5 pb-3 mt-auto shadow-lg">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-5 col-md-6">
+                    <h5 class="fw-bold mb-3 d-flex align-items-center">
+                        <i class="bi bi-rocket-takeoff text-info me-2 fs-4"></i> CODERSTORE
+                    </h5>
+                    <p class="text-secondary small pe-lg-5" style="line-height: 1.6;">
+                        Tu destino número uno para el mejor streetwear y tecnología. Proyecto desarrollado con arquitectura Backend sólida, integrando MongoDB, WebSockets y diseño UI/UX.
+                    </p>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="fw-bold mb-3 text-uppercase" style="letter-spacing: 1px;">Navegación</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2">
+                        <li><a href="/products" class="text-secondary text-decoration-none hover-celeste small"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i> Catálogo de Productos</a></li>
+                        <li><a href="/realtimeproducts" class="text-secondary text-decoration-none hover-celeste small"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i> Gestión en Vivo</a></li>
+                        <li><a href="/login" class="text-secondary text-decoration-none hover-celeste small"><i class="bi bi-chevron-right me-1" style="font-size: 0.7rem;"></i> Mi Cuenta</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 col-md-12">
+                    <h6 class="fw-bold mb-3 text-uppercase" style="letter-spacing: 1px;">Conectá</h6>
+                    <div class="d-flex gap-3 mb-3">
+                        <a href="#" class="bg-secondary bg-opacity-25 text-light rounded-circle d-flex justify-content-center align-items-center hover-celeste" style="width: 40px; height: 40px; transition: all 0.3s;">
+                            <i class="bi bi-github fs-5"></i>
+                        </a>
+                        <a href="#" class="bg-secondary bg-opacity-25 text-light rounded-circle d-flex justify-content-center align-items-center hover-celeste" style="width: 40px; height: 40px; transition: all 0.3s;">
+                            <i class="bi bi-linkedin fs-5"></i>
+                        </a>
+                        <a href="#" class="bg-secondary bg-opacity-25 text-light rounded-circle d-flex justify-content-center align-items-center hover-celeste" style="width: 40px; height: 40px; transition: all 0.3s;">
+                            <i class="bi bi-instagram fs-5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="border-secondary mt-4 mb-4" style="opacity: 0.3;">
+            
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center text-secondary small">
+                <p class="mb-2 mb-md-0">&copy; 2026 CoderStore. Todos los derechos reservados.</p>
+                <p class="mb-0">
+                    Desarrollado por Camilo Monti Venesia.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let lastScrollTop = 0;
+        const header = document.getElementById('smart-header');
+
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolleando hacia abajo
+                header.classList.add('nav-hidden');
+            } else {
+                // Scrolleando hacia arriba
+                header.classList.remove('nav-hidden');
+            }
+            lastScrollTop = scrollTop;
+        });
+    </script>
+
+    <script>
+    // Función central para actualizar la vista del número
+    function actualizarGloboVisual(cantidad) {
+        const badge = document.getElementById('cart-badge');
+        if (badge) {
+            if (cantidad > 0) {
+                badge.innerText = cantidad;
+                badge.classList.remove('d-none');
+            } else {
+                badge.classList.add('d-none');
+            }
+        }
+    }
+
+    // Sincroniza silenciosamente con tu Backend (Base de datos)
+    async function syncCartBadge() {
+        {{#if user}}
+        try {
+            const response = await fetch(`/api/carts/{{user.cart}}`);
+            const contentType = response.headers.get("content-type");
+            
+            // Verificamos que el backend nos devuelva la info del carrito en JSON
+            if (response.ok && contentType && contentType.indexOf("application/json") !== -1) {
+                const data = await response.json();
+                const cart = data.payload || data; // Por si tu backend usa { payload: ... }
+                
+                if (cart && cart.products) {
+                    // Sumamos las cantidades de todos los productos
+                    const totalItems = cart.products.reduce((total, item) => total + item.quantity, 0);
+                    actualizarGloboVisual(totalItems);
+                }
+            }
+        } catch (error) {
+            console.error('Error al sincronizar globo del carrito:', error);
+        }
+        {{/if}}
+    }
+
+    // 1. Apenas el usuario entra o recarga, buscamos el número real
+    document.addEventListener('DOMContentLoaded', syncCartBadge);
+
+    // 2. Cuando toca "Agregar al Carrito", sumamos 1 visualmente rápido y sincronizamos
+    function updateCartBadge() {
+        const badge = document.getElementById('cart-badge');
+        let currentCount = parseInt(badge.innerText) || 0;
+        actualizarGloboVisual(currentCount + 1);
+        
+        // Sincronizamos con el servidor por las dudas
+        syncCartBadge();
+    }
+</script>
+</body>
+</html>

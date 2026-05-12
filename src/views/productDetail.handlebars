@@ -1,0 +1,151 @@
+<div class="container mt-5 mb-5" style="max-width: 950px;">
+    
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 1px;">
+            <li class="breadcrumb-item"><a href="/products" class="text-dark text-decoration-none">Catálogo</a></li>
+            <li class="breadcrumb-item text-muted">{{product.category}}</li>
+            <li class="breadcrumb-item text-dark" aria-current="page">{{product.title}}</li>
+        </ol>
+    </nav>
+
+    <div class="row gx-lg-5 align-items-center">
+        
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="position-relative w-100 bg-light d-flex justify-content-center align-items-center overflow-hidden rounded-1" style="height: 450px;">
+                {{#if product.thumbnails.[0]}}
+                    <img src="{{product.thumbnails.[0]}}" alt="{{product.title}}" class="img-fluid w-100 h-100 detail-img" style="object-fit: cover;">
+                {{else}}
+                    <div class="text-center py-5">
+                        <i class="bi bi-image text-secondary mb-2" style="font-size: 3rem; opacity: 0.2;"></i>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+
+        <div class="col-md-6 d-flex flex-column justify-content-center py-md-3 ps-lg-4">
+            
+            <span class="text-uppercase text-muted mb-2 fw-bold" style="font-size: 0.7rem; letter-spacing: 2px;">
+                {{product.category}}
+            </span>
+            
+            <h1 class="fw-bold text-dark text-uppercase mb-2" style="font-size: 1.7rem; letter-spacing: -0.5px; line-height: 1.2;">
+                {{product.title}}
+            </h1>
+            
+            <p class="text-muted mb-3" style="font-size: 0.9rem; line-height: 1.5;">
+                {{product.description}}
+            </p>
+            
+            <div class="d-flex align-items-end mb-3 gap-3">
+                <span class="fw-bold text-dark" style="font-size: 2rem; line-height: 0.8;">${{product.price}}</span>
+                <span class="stock-display mb-1" data-stock="{{product.stock}}" style="font-size: 0.85rem;"></span>
+            </div>
+
+            <p class="text-muted text-uppercase mb-3" style="font-size: 0.7rem; letter-spacing: 1px;">
+                Ref: {{product.code}}
+            </p>
+
+            <button class="btn btn-dark w-100 rounded-0 fw-bold py-2 text-uppercase mb-2 btn-add-detail transition-all" style="letter-spacing: 2px; font-size: 0.85rem;" onclick="agregarAlCarrito('{{product._id}}')">
+                Agregar al Carrito
+            </button>
+            
+            <div class="d-flex gap-2">
+                {{#if user}}
+                    <a href="/carts/{{user.cart}}" class="btn btn-outline-dark w-50 rounded-0 fw-bold py-2 text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Mi Carrito</a>
+                {{else}}
+                    <a href="/login" class="btn btn-outline-dark w-50 rounded-0 fw-bold py-2 text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Iniciar Sesión</a>
+                {{/if}}
+                <a href="/products" class="btn btn-light border-dark border w-50 rounded-0 fw-bold py-2 text-uppercase text-dark btn-volver" style="font-size: 0.75rem; letter-spacing: 1px;">Catálogo</a>
+            </div>
+            
+            <div class="mt-4 pt-3 border-top d-flex justify-content-between text-uppercase text-dark fw-bold" style="font-size: 0.6rem; letter-spacing: 1px;">
+                <div class="d-flex flex-column align-items-center gap-1 hover-icon">
+                    <i class="bi bi-truck fs-5"></i> Envío gratis
+                </div>
+                <div class="d-flex flex-column align-items-center gap-1 hover-icon">
+                    <i class="bi bi-shield-check fs-5"></i> Compra Segura
+                </div>
+                <div class="d-flex flex-column align-items-center gap-1 hover-icon">
+                    <i class="bi bi-arrow-return-left fs-5"></i> Devolución
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .detail-img { transition: transform 0.8s ease; }
+    .detail-img:hover { transform: scale(1.03); }
+    .btn-add-detail { background-color: #000; border-color: #000; transition: background-color 0.3s ease, transform 0.2s ease; }
+    .btn-add-detail:hover { background-color: #333; border-color: #333; transform: translateY(-2px); }
+    .btn-volver:hover { background-color: #f8f9fa; }
+    .hover-icon { cursor: pointer; transition: opacity 0.3s ease; }
+    .hover-icon:hover { opacity: 0.6; }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    async function agregarAlCarrito(productId) {
+        {{#if user}}
+            // VALIDACIÓN DE RÚBRICA: Bloquear al admin usando JS puro
+            const userRole = "{{user.role}}";
+            
+            if (userRole === "admin") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Acción no permitida',
+                    text: 'Los administradores no pueden agregar productos al carrito ni realizar compras.',
+                    confirmButtonColor: '#000',
+                    iconColor: '#000'
+                });
+                return; // Cortamos la ejecución acá
+            }
+
+            try {
+                const response = await fetch(`/api/carts/{{user.cart}}/products/${productId}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        toast: true, position: 'bottom-end', icon: 'success',
+                        title: 'Agregado al carrito', showConfirmButton: false, timer: 2000,
+                        timerProgressBar: true, iconColor: '#000'
+                    });
+                    if (typeof updateCartBadge === 'function') updateCartBadge();
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Oops...', text: 'Error al agregar', confirmButtonColor: '#000' });
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        {{else}}
+            Swal.fire({
+                title: 'ACCESO REQUERIDO',
+                text: 'Iniciá sesión o registrate para armar tu carrito.',
+                icon: 'info', showCancelButton: true, confirmButtonText: 'INICIAR SESIÓN',
+                cancelButtonText: 'SEGUIR MIRANDO', confirmButtonColor: '#000', 
+                cancelButtonColor: '#6c757d', iconColor: '#000'
+            }).then((result) => {
+                if (result.isConfirmed) { window.location.href = '/login'; }
+            });
+        {{/if}}
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const stockDisplays = document.querySelectorAll('.stock-display');
+        stockDisplays.forEach(display => {
+            const stock = parseInt(display.getAttribute('data-stock'));
+            if (stock > 5) {
+                display.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-circle-fill me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>En Stock</span>';
+            } else if (stock > 0 && stock <= 5) {
+                display.innerHTML = `<span class="text-danger fw-bold"><i class="bi bi-fire me-1"></i>¡Últimas ${stock}!</span>`;
+            } else {
+                display.innerHTML = '<span class="text-muted fw-bold">Agotado</span>';
+            }
+        });
+    });
+</script>

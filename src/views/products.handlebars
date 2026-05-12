@@ -1,0 +1,209 @@
+<div class="container mt-4">
+    
+    <div class="mb-5 position-relative rounded-4 overflow-hidden shadow-sm" style="height: 320px; background: url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') center/cover;">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.45;"></div>
+        <div class="position-absolute top-50 start-50 translate-middle text-center w-100 px-3">
+            <span class="badge bg-white text-dark px-3 py-2 mb-3 rounded-0" style="letter-spacing: 2px;">NUEVA TEMPORADA</span>
+            <h1 class="text-white fw-bold display-4 text-uppercase mb-0" style="letter-spacing: 1px;">Streetwear Essentials</h1>
+            <p class="text-white mt-2 fs-5 fw-light">Descubrí la colección Otoño/Invierno</p>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-3 border-bottom gap-3">
+        <h3 class="text-dark fw-bold m-0 text-uppercase" style="letter-spacing: 1px;">
+            Todos los Productos
+        </h3>
+        
+        <div class="d-flex align-items-center gap-2">
+            <span class="text-muted small text-uppercase" style="letter-spacing: 1px;">Ordenar por</span>
+            <select class="form-select form-select-sm border-dark shadow-none rounded-0 px-3" onchange="ordenarProductos(this.value)" style="cursor: pointer; width: auto;">
+                <option value="">Relevancia</option>
+                <option value="asc">Precio: Menor a Mayor</option>
+                <option value="desc">Precio: Mayor a Menor</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
+        {{#each products}}
+        <div class="col">
+            <div class="card h-100 rounded-0 product-card bg-transparent" onclick="window.location.href='/products/{{this._id}}'">
+                
+                <div class="position-relative overflow-hidden bg-light" style="height: 300px;">
+                    {{#if this.thumbnails.[0]}}
+                        <img src="{{this.thumbnails.[0]}}" alt="{{this.title}}" class="w-100 h-100 product-img" style="object-fit: cover;">
+                    {{else}}
+                        <div class="h-100 d-flex align-items-center justify-content-center">
+                            <i class="bi bi-image text-secondary" style="font-size: 3rem; opacity: 0.2;"></i>
+                        </div>
+                    {{/if}}
+                </div>
+                
+                <div class="card-body p-3 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <span class="text-uppercase text-muted" style="font-size: 0.65rem; letter-spacing: 1.5px;">
+                            {{this.category}}
+                        </span>
+                    </div>
+                    
+                    <h6 class="card-title fw-bold text-dark mb-2" style="font-size: 1rem;">{{this.title}}</h6>
+                    
+                    <div class="mt-auto d-flex justify-content-between align-items-end mb-3">
+                        <span class="fw-bold fs-5 text-dark">${{this.price}}</span>
+                        <span class="stock-display" data-stock="{{this.stock}}" style="font-size: 0.8rem;"></span>
+                    </div>
+                    
+                    <button class="btn btn-dark w-100 rounded-0 fw-bold py-2 text-uppercase btn-add" style="letter-spacing: 1px; font-size: 0.8rem;" onclick="event.stopPropagation(); agregarAlCarrito('{{this._id}}')">
+                        Agregar al Carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+    <div class="d-flex justify-content-center mt-5 mb-5 pb-5">
+        <nav aria-label="Navegación de páginas">
+            <ul class="pagination pagination-sm">
+                {{#if hasPrevPage}}
+                    <li class="page-item"><a class="page-link text-dark border-dark rounded-0 px-3" href="{{prevLink}}">ANTERIOR</a></li>
+                {{else}}
+                    <li class="page-item disabled"><span class="page-link rounded-0 px-3 border-light text-muted">ANTERIOR</span></li>
+                {{/if}}
+                
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link bg-dark border-dark text-white rounded-0 px-4 fw-bold">{{page}} / {{totalPages}}</span>
+                </li>
+                
+                {{#if hasNextPage}}
+                    <li class="page-item"><a class="page-link text-dark border-dark rounded-0 px-3" href="{{nextLink}}">SIGUIENTE</a></li>
+                {{else}}
+                    <li class="page-item disabled"><span class="page-link rounded-0 px-3 border-light text-muted">SIGUIENTE</span></li>
+                {{/if}}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<div class="mt-5 pt-5 border-top">
+    
+    <div class="row text-center g-4 mb-5">
+        <div class="col-md-4">
+            <i class="bi bi-box-seam fs-1 mb-3 d-block text-dark"></i>
+            <h6 class="fw-bold text-uppercase mb-2" style="letter-spacing: 1px; font-size: 0.85rem;">Envíos a todo el país</h6>
+            <p class="text-muted small mb-0">Gratis en compras superiores a $150.000</p>
+        </div>
+        <div class="col-md-4 border-start border-end d-none d-md-block">
+            <i class="bi bi-arrow-counterclockwise fs-1 mb-3 d-block text-dark"></i>
+            <h6 class="fw-bold text-uppercase mb-2" style="letter-spacing: 1px; font-size: 0.85rem;">Cambios Flexibles</h6>
+            <p class="text-muted small mb-0">Tenés 30 días para devolver tu compra sin costo</p>
+        </div>
+        <div class="col-md-4 d-md-none"> 
+            <i class="bi bi-arrow-counterclockwise fs-1 mb-3 d-block text-dark"></i>
+            <h6 class="fw-bold text-uppercase mb-2" style="letter-spacing: 1px; font-size: 0.85rem;">Cambios Flexibles</h6>
+            <p class="text-muted small mb-0">Tenés 30 días para devolver tu compra sin costo</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-shield-check fs-1 mb-3 d-block text-dark"></i>
+            <h6 class="fw-bold text-uppercase mb-2" style="letter-spacing: 1px; font-size: 0.85rem;">Pago Seguro</h6>
+            <p class="text-muted small mb-0">Protegemos tus datos con encriptación de punta a punta</p>
+        </div>
+    </div>
+
+    <div class="bg-light p-5 text-center mb-4 d-flex flex-column align-items-center justify-content-center" style="min-height: 250px;">
+        <h5 class="fw-bold text-uppercase mb-2" style="letter-spacing: 2px; font-size: 1.2rem;">Unite al Club CoderStore</h5>
+        <p class="text-muted mb-4" style="font-size: 0.9rem;">Enterate antes que nadie de los nuevos drops, colaboraciones y promociones exclusivas.</p>
+        
+        <div class="input-group shadow-sm" style="max-width: 500px;">
+            <input type="email" class="form-control rounded-0 border-dark px-4 py-3 shadow-none bg-white" placeholder="Tu correo electrónico" style="font-size: 0.9rem;">
+            <button class="btn btn-dark rounded-0 px-4 py-3 text-uppercase fw-bold transition-all btn-newsletter" style="letter-spacing: 1px; font-size: 0.85rem;" onclick="Swal.fire({toast:true, position:'bottom-end', icon:'success', title:'¡Gracias por suscribirte!', showConfirmButton:false, timer:2500, iconColor:'#000'})">
+                Suscribirme
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .product-img { transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .product-card:hover .product-img { transform: scale(1.05); }
+    .product-card {
+        cursor: pointer;
+        border: 1px solid transparent !important;
+        transition: border-color 0.1s ease;
+        -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+    }
+    .product-card:hover { border-color: #000 !important; }
+    .btn-add { background-color: #000; border-color: #000; transition: all 0.3s ease; }
+    .btn-add:hover { background-color: #333; border-color: #333; }
+    .btn-newsletter:hover { background-color: #333; border-color: #333; }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function ordenarProductos(orden) {
+        if (orden) { window.location.href = `/products?sort=${orden}`; }
+    }
+
+    async function agregarAlCarrito(productId) {
+        {{#if user}}
+            // VALIDACIÓN DE RÚBRICA: Bloquear al admin usando JS puro
+            const userRole = "{{user.role}}";
+            
+            if (userRole === "admin") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Acción no permitida',
+                    text: 'Los administradores no pueden agregar productos al carrito ni realizar compras.',
+                    confirmButtonColor: '#000',
+                    iconColor: '#000'
+                });
+                return; // Cortamos la ejecución acá
+            }
+
+            try {
+                const response = await fetch(`/api/carts/{{user.cart}}/products/${productId}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        toast: true, position: 'bottom-end', icon: 'success',
+                        title: 'Agregado al carrito', showConfirmButton: false, timer: 2000,
+                        timerProgressBar: true, iconColor: '#000'
+                    });
+                    if (typeof updateCartBadge === 'function') updateCartBadge();
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Oops...', text: 'Error al agregar', confirmButtonColor: '#000' });
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        {{else}}
+            Swal.fire({
+                title: 'ACCESO REQUERIDO',
+                text: 'Iniciá sesión o registrate para armar tu carrito.',
+                icon: 'info', showCancelButton: true, confirmButtonText: 'INICIAR SESIÓN',
+                cancelButtonText: 'SEGUIR MIRANDO', confirmButtonColor: '#000', 
+                cancelButtonColor: '#6c757d', iconColor: '#000'
+            }).then((result) => {
+                if (result.isConfirmed) { window.location.href = '/login'; }
+            });
+        {{/if}}
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const stockDisplays = document.querySelectorAll('.stock-display');
+        stockDisplays.forEach(display => {
+            const stock = parseInt(display.getAttribute('data-stock'));
+            if (stock > 5) {
+                display.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-circle-fill me-1" style="font-size: 0.5rem; vertical-align: middle;"></i>En Stock</span>';
+            } else if (stock > 0 && stock <= 5) {
+                display.innerHTML = `<span class="text-danger fw-bold"><i class="bi bi-fire me-1"></i>¡Últimas ${stock}!</span>`;
+            } else {
+                display.innerHTML = '<span class="text-muted fw-bold">Agotado</span>';
+            }
+        });
+    });
+</script>

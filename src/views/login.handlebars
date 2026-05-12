@@ -1,0 +1,91 @@
+<div class="container mt-5 mb-5 d-flex align-items-center justify-content-center" style="min-height: 60vh;">
+    <div class="row w-100 justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            
+            <div class="text-center mb-5">
+                <i class="bi bi-rocket-takeoff-fill fs-1 text-dark mb-3"></i>
+                <h2 class="fw-bold text-uppercase" style="letter-spacing: 2px;">Acceso</h2>
+                <p class="text-muted small text-uppercase" style="letter-spacing: 1px;">Ingresá a tu cuenta CoderStore</p>
+            </div>
+
+            <form id="loginForm" class="px-md-4">
+                <div class="form-floating mb-4">
+                    <input type="email" name="email" class="form-control form-control-premium" id="emailInput" placeholder="name@example.com" required>
+                    <label for="emailInput" class="text-muted text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Correo Electrónico</label>
+                </div>
+
+                <div class="form-floating mb-5">
+                    <input type="password" name="password" class="form-control form-control-premium" id="passwordInput" placeholder="Contraseña" required>
+                    <label for="passwordInput" class="text-muted text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Contraseña</label>
+                </div>
+
+                <button type="submit" class="btn btn-dark w-100 py-3 mb-4 fw-bold rounded-0 text-uppercase transition-all btn-auth" style="letter-spacing: 2px; font-size: 0.9rem;">
+                    Ingresar
+                </button>
+                
+                <div class="text-center border-top pt-4">
+                    <span class="text-muted small text-uppercase" style="letter-spacing: 1px;">¿No tenés cuenta? </span>
+                    <a href="/register" class="text-dark fw-bold small text-uppercase text-decoration-none border-bottom border-dark pb-1 ms-2" style="letter-spacing: 1px;">Crear Cuenta</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilo de inputs premium (Solo borde inferior) */
+    .form-control-premium {
+        border: none !important;
+        border-bottom: 2px solid #e0e0e0 !important;
+        border-radius: 0 !important;
+        background-color: transparent !important;
+        padding-left: 0 !important;
+        box-shadow: none !important;
+        transition: border-color 0.3s ease;
+    }
+    .form-control-premium:focus {
+        border-bottom: 2px solid #000 !important;
+    }
+    
+    .form-floating > label {
+        padding-left: 0;
+    }
+
+    .btn-auth:hover {
+        background-color: #333;
+        transform: translateY(-2px);
+    }
+</style>
+
+<script>
+    const form = document.getElementById('loginForm');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault(); 
+
+        const data = new FormData(form);
+        const obj = {};
+        data.forEach((value, key) => obj[key] = value);
+
+        const response = await fetch('/api/sessions/login', {
+            method: 'POST',
+            body: JSON.stringify(obj),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+
+        if (response.status === 200) {
+            window.location.href = '/products';
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'ACCESO DENEGADO',
+                text: result.error || 'Credenciales inválidas',
+                confirmButtonText: 'REINTENTAR',
+                confirmButtonColor: '#000',
+                iconColor: '#000'
+            });
+        }
+    });
+</script>
