@@ -11,7 +11,7 @@ export default class CartDAO {
 
     async getCartById(id) {
         try {
-            return await cartModel.findOne({ _id: id });
+            return await cartModel.findOne({ _id: id }).populate('products.product');
         } catch (error) {
             throw new Error(`Error al obtener el carrito: ${error.message}`);
         }
